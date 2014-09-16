@@ -13,6 +13,7 @@
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
 
+#define FILLCHAR '_'
 
 // Hardware text mode color constants.
 enum vga_color
@@ -58,6 +59,7 @@ size_t strlen(const char* str)
 static const size_t VGA_WIDTH  = 80;
 static const size_t VGA_HEIGHT = 25;
 static const size_t VGA_BUFFER = 0xB8000;
+static size_t VGA_BUFFER_SIZE;
 
 size_t    terminal_row;
 size_t    terminal_column;
@@ -75,9 +77,10 @@ void terminal_initialize()
         for ( size_t x = 0; x < VGA_WIDTH; x++ )
         {
             const size_t index = y * VGA_WIDTH + x;
-            terminal_buffer[index] = make_vgaentry(' ', terminal_color);
+            terminal_buffer[index] = make_vgaentry(FILLCHAR, terminal_color);
         }
     }
+    VGA_BUFFER_SIZE = VGA_WIDTH * VGA_HEIGHT;
 }
 
 void terminal_setcolor(uint8_t color)
@@ -91,13 +94,31 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
     terminal_buffer[index] = make_vgaentry(c, color);
 }
 
+void terminal_scroll()
+{
+    uint16_t *dst = terminal_buffer;
+    uint16_t *src = terminal_buffer + VGA_WIDTH;
+    int len = VGA_BUFFER_SIZE - VGA_WIDTH;
+
+    while(len--)
+        *dst++ = *src++;
+
+    // Don't forget about last blank row
+    len = VGA_WIDTH;
+    while (len--)
+        *dst++ = make_vgaentry(FILLCHAR, terminal_color);
+}
+
 void terminal_putchar(char c)
 {
     if ( c == '\n' )
     {
         terminal_column = 0;
         if ( ++terminal_row == VGA_HEIGHT )
-            terminal_row = 0;
+        {
+            terminal_scroll();
+            terminal_row--;
+        }
 
         return;
     }
@@ -108,7 +129,8 @@ void terminal_putchar(char c)
         terminal_column = 0;
         if ( ++terminal_row == VGA_HEIGHT )
         {
-            terminal_row = 0;
+            terminal_scroll();
+            terminal_row--;
         }
     }
 }
@@ -123,7 +145,12 @@ void terminal_writestring(const char* data)
 void kernel_main()
 {
     terminal_initialize();
-    // Since there is no support for newlines in terminal_putchar yet, \n will
-    //   produce some VGA specific character instead. This is normal.
-    terminal_writestring("Hello, kernel World!\n");
+    for ( size_t y = 0; y < VGA_HEIGHT; y++ )
+    {
+        terminal_putchar(y%10 + '0');
+        terminal_writestring("Hello, kernel World!\n");
+    }
+
+    terminal_writestring("Scroll, yeah!\n");
+    terminal_writestring("Scroll, yeah 2!\n");
 }
