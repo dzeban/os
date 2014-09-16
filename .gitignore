@@ -1,2 +1,5 @@
 *.bin
 *.o
+*.tar.bz2
+toolchain/build
+toolchain/cross
