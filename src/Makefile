@@ -13,13 +13,19 @@ COMPILER_OPTS := $(KERNEL_OPTS) -std=gnu99 -Wall -Wextra
 
 default: kernel
 
+vga.o: vga.c
+	$(CC) -c $^ -o $@ $(COMPILER_OPTS)
+
+lib.o: lib.c
+	$(CC) -c $^ -o $@ $(COMPILER_OPTS)
+
 kernel.o: kernel.c
 	$(CC) -c $^ -o $@ $(COMPILER_OPTS)
 
 boot.o: boot.s
 	$(AS) $^ -o $@
 
-kernel: kernel.o boot.o
+kernel: kernel.o boot.o lib.o vga.o
 	$(CC) -T $(LINKER_SCRIPT) $^ -o $@.bin $(LINKER_OPTS)
 
 run: kernel
