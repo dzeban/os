@@ -5,6 +5,7 @@
 
 #include "lib.h"
 #include "vga.h"
+#include "gdt.h"
 
 // Check if the compiler thinks if we are targeting the wrong operating system.
 #if defined(__linux__)
@@ -18,13 +19,14 @@
 
 void kernel_main()
 {
-    terminal_initialize();
-    for ( size_t y = 0; y < VGA_HEIGHT; y++ )
-    {
-        terminal_putchar(y%10 + '0');
-        terminal_writestring("Hello, kernel World!\n");
-    }
+	gdt_init();
+	terminal_initialize();
+	for ( size_t y = 0; y < VGA_HEIGHT; y++ )
+	{
+		terminal_putchar(y%10 + '0');
+		terminal_writestring("Hello, kernel World!\n");
+	}
 
-    terminal_writestring("Scroll, yeah!\n");
-    terminal_writestring("Scroll, yeah 2!\n");
+	terminal_writestring("Scroll, yeah!\n");
+	terminal_writestring("Scroll, yeah 2!\n");
 }

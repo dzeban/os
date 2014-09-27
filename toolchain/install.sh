@@ -22,7 +22,7 @@ function setup()
 function build_binutils()
 {
 	cd build/binutils
-	../../$BINUTILS/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --disable-werror
+	../../$BINUTILS/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --disable-werror --with-sysroot
 	make
 	make install
 	cd -
@@ -43,7 +43,8 @@ function build()
 {
 	setup
 	build_binutils
-	build_gcc
+	#build_gcc
 }
 
-#build
+build
+
