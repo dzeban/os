@@ -6,6 +6,7 @@
 #include "lib.h"
 #include "vga.h"
 #include "gdt.h"
+#include "idt.h"
 
 // Check if the compiler thinks if we are targeting the wrong operating system.
 #if defined(__linux__)
@@ -19,7 +20,6 @@
 
 void kernel_main()
 {
-	gdt_init();
 	terminal_initialize();
 	for ( size_t y = 0; y < VGA_HEIGHT; y++ )
 	{
@@ -29,4 +29,10 @@ void kernel_main()
 
 	terminal_writestring("Scroll, yeah!\n");
 	terminal_writestring("Scroll, yeah 2!\n");
+
+	gdt_init();
+	idt_init();
+
+	asm volatile ("int $0x01");
+	asm volatile ("int $0x0F");
 }

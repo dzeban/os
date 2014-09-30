@@ -8,11 +8,16 @@ QEMU := qemu-system-i386
 
 LINKER_SCRIPT := linker.ld
 
-KERNEL_OPTS := -ffreestanding -O2
+KERNEL_OPTS := -ffreestanding -O0 -g
 LINKER_OPTS := $(KERNEL_OPTS) -nostdlib -lgcc
 COMPILER_OPTS := $(KERNEL_OPTS) -std=gnu99 -Wall -Wextra
 
 default: kernel
+
+idt.a: idt.c interrupts.S
+	$(AS) interrupts.S -o interrupts.o
+	$(CC) -c idt.c -o idt.o $(COMPILER_OPTS)
+	$(AR) cr $@ interrupts.o idt.o
 
 gdt.a: gdt.c gdt.S
 	$(AS) gdt.S -o gdt_asm.o
@@ -31,7 +36,7 @@ kernel.o: kernel.c
 boot.o: boot.s
 	$(AS) $^ -o $@
 
-kernel: kernel.o boot.o lib.o vga.o gdt.a
+kernel: kernel.o boot.o lib.o vga.o gdt.a idt.a
 	$(CC) -T $(LINKER_SCRIPT) $^ -o $@.bin $(LINKER_OPTS)
 
 run: kernel

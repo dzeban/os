@@ -20,7 +20,7 @@ static void gdt_set_gate(uint8_t num, uint32_t base, uint32_t limit, uint8_t acc
 
 void gdt_init()
 {
-	gdt_ptr.base = (uint32_t *)&GDT;
+	gdt_ptr.base = (uint32_t)&GDT;
 	gdt_ptr.limit = sizeof(GDT) - 1;
 
 	// Setup flat model with 4 segments

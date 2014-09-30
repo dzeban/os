@@ -4,7 +4,7 @@ gdt_flush:
 	lgdt (%eax) # Set GDT
 
 	movw $16, %ax # Get GDT[2] (each GDT entry is 8 bytes)
-	movw %ax, %ds # Load all data segment selectors
+	movw %ax, %ds # Set GDT[2] as a new data segment selector
 	movw %ax, %es
 	movw %ax, %fs
 	movw %ax, %gs
