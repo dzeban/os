@@ -10,3 +10,15 @@ Basically at this moment it's just 2 tutorials:
 
 * Bare bones <http://wiki.osdev.org/Bare_Bones>
 * Meaty skeleton <http://wiki.osdev.org/Meaty_Skeleton>
+
+2015-07-16 19:53 Let's try to build another bare bones version with help of
+<http://littleosbook.github.io/>.
+
+This tutorial is kinda more consistent and modern. What tempts me is using of
+NASM in it though osdev wiki has one too
+<http://wiki.osdev.org/Bare_Bones_with_NASM>
+
+Also it actively uses Bochs which I failed to employ while doing osdev
+BareBones. 
+
+Lets give it a try.
