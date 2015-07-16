@@ -1,0 +1,12 @@
+2015-07-16 19:24 Hello, os!
+
+2015-07-16 19:35 Return to OS development after a long break, trying to recall all the sources
+and tutorials I was using.
+
+Entry point is wiki.osdev.org category Level 1
+<http://wiki.osdev.org/Category:Level_1_Tutorials>
+
+Basically at this moment it's just 2 tutorials:
+
+* Bare bones <http://wiki.osdev.org/Bare_Bones>
+* Meaty skeleton <http://wiki.osdev.org/Meaty_Skeleton>
